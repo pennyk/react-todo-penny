@@ -74,15 +74,17 @@ function AddButton() {
   );
 }
 
+/**
+ * clearDone
+ * 
+ * Removes checked items from todo list
+ * @param {*} event 
+ */
 function clearDone (event) {
-  console.log('clearDone TEST');
   // get list of todo items
   let items = document.querySelectorAll('#todo input[type="checkbox"]');
-  console.log('items', items, typeof items);
-  console.log('items length:', items.length);
   if (items) {
     for (let i = 0; i < items.length; i++) {
-      console.log('i:', items[i].value, items[i].checked);
       // remove todo items marked as done
       if (items[i].checked) {
         items[i].parentNode.remove();
@@ -91,7 +93,6 @@ function clearDone (event) {
   }
 
   event.preventDefault();
-  return;
 }
 
 function addItems () {
