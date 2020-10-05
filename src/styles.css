@@ -1,4 +1,10 @@
 .App {
   font-family: sans-serif;
+  text-align: left;
+}
+
+.App h1 {
   text-align: center;
 }
+
+/* text-decoration: line-through; */
