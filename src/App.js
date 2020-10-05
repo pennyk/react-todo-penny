@@ -36,16 +36,16 @@ class TodoForm extends React.Component {
     event.preventDefault();
 
     // get list of todo items
-    let items = document.querySelectorAll('#todo input[type="checkbox"]');
-    // TODO: make sure DOM and this.state are in sync
-    if (items) {
-      for (let i = 0; i < items.length; i++) {
-        // remove todo items marked as done
-        if (items[i].checked) {
-          items[i].parentNode.remove();
-        }
-      }
-    }
+    let stateItems = ("items" in this.state) ? this.state.items : [];
+
+    // remove todo items that have been marked done
+    let updatedItems = stateItems.filter(function(item) {
+      let domItem = document.getElementById(item.id.toString());
+      return !domItem.checked;
+    });
+
+    // update todo list
+    this.setState({ "items": updatedItems });
   }
 
   handleSubmit(event) {
