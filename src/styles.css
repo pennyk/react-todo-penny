@@ -7,4 +7,6 @@
   text-align: center;
 }
 
-/* text-decoration: line-through; */
+.App #todo input[type="checkbox"]:checked + label {
+  text-decoration: line-through;
+}
