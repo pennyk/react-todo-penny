@@ -2,12 +2,12 @@ import React from "react";
 import "./styles.css";
 
 const todos = [
-  { id: "test1", value: "test1" },
-  { id: "test2", value: "test2" }
+  { id: "test1", value: "Pretend previous todo - Test 1" },
+  { id: "test2", value: "Pretend previous todo - Test 2" }
 ];
 
 export default function App() {
-  return ( // items={this.state.items}
+  return (
     <div className="App">
       <h1>Todo App</h1>
       <h2>Todo</h2>
@@ -25,7 +25,7 @@ class TodoForm extends React.Component {
       } 
     }
     if (!this.state || !this.state.items) {
-      this.state = { items: todos }; // [] TODO if todo list emptied, don't repopulate with defaults
+      this.state = { items: todos }; // TODO: if todo list emptied, don't repopulate with defaults - add test
     }
     
     this.clearDone = this.clearDone.bind(this);
@@ -46,7 +46,6 @@ class TodoForm extends React.Component {
         }
       }
     }
-    //this.handleChange(event);
   }
 
   handleSubmit(event) {
@@ -60,7 +59,7 @@ class TodoForm extends React.Component {
     if (items.length === 0) {
       items = (this.state && this.state.items) ? this.state.items : [];
     }
-    items = items.concat([{id: id, value: value}]); //[ ...items, {id: id, value: value} ];
+    items = items.concat([{id: id, value: value}]);
     this.setState({ "items": items });
     console.log("NEW items", items.length, id, value);
   }
@@ -90,23 +89,7 @@ class TodoList extends React.Component {
 
     console.log('TL props', props, ' items', items);
 
-    //this.handleChange = this.handleChange.bind(this);
   }
-
-  // handleChange (event) {
-  //   //let items = this.state.items;
-  //   // let listItems = items.map((item) => 
-  //   //   <TodoItem key={item.id.toString()} id={item.id.toString()} value={item.value} />
-  //   // );
-  //   console.log('handleChange', event.target.id, event.target.textContent);
-  //   // this.setState({ items: [ ...items, 
-  //   //   {id: event.target.id, value: event.target.value}
-  //   // ]});
-
-  //   let items = (this.state.items) ? this.state.items : [];
-  //   items = items.concat([{id: event.target.id, value: event.target.value}]);
-  //   this.setState({ items: items });
-  // }
 
   render () {
     console.log("TodoList.render", this.state, this.props);
