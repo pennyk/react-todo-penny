@@ -1,55 +1,129 @@
 import React from "react";
 import "./styles.css";
 
+const todos = [
+  { id: "test1", value: "test1" },
+  { id: "test2", value: "test2" }
+];
+
 export default function App() {
-  return (
+  return ( // items={this.state.items}
     <div className="App">
       <h1>Todo App</h1>
       <h2>Todo</h2>
-      <TodoForm/>
+      <TodoForm />
     </div>
   );
 }
 
 class TodoForm extends React.Component {
-  constructor(props) {
-    super (props);
-    //this.state = {value: ''};
-
-    this.handleChange = this.handleChange.bind(this);
-    //this.handleSubmit = this.handleSubmit.bind(this);
+  constructor (props) {
+    super(props);
+    if(!this.state) {
+      if(props && props.items) {
+        this.state = { items: props.items };
+      } 
+    }
+    if (!this.state || !this.state.items) {
+      this.state = { items: todos }; // [] TODO if todo list emptied, don't repopulate with defaults
+    }
+    
+    this.clearDone = this.clearDone.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
-    console.log('handleChange', event);
-    //this.setState({});
+  clearDone (event) {
+    event.preventDefault();
+
+    // get list of todo items
+    let items = document.querySelectorAll('#todo input[type="checkbox"]');
+    // TODO: make sure DOM and this.state are in sync
+    if (items) {
+      for (let i = 0; i < items.length; i++) {
+        // remove todo items marked as done
+        if (items[i].checked) {
+          items[i].parentNode.remove();
+        }
+      }
+    }
+    //this.handleChange(event);
   }
 
-  // handleSubmit(event) {
-  //   //this.setState({});
-  //   console.log('handleSubmit', event);
-  //   //let list = document.
+  handleSubmit(event) {
+    event.preventDefault();
 
-  //   event.preventDefault();
-  // } //  onSubmit={this.handleSubmit}
+    console.log("handleSubmit", event.target, "state", this.state, "props", this.props);
+    let value = event.target.querySelector("#todo input#item").value;
+    // choose unique id based on timestamp
+    let id = new Date().valueOf().toString();
+    let items = (this.props && this.props.items) ? this.props.items : [];
+    if (items.length === 0) {
+      items = (this.state && this.state.items) ? this.state.items : [];
+    }
+    items = items.concat([{id: id, value: value}]); //[ ...items, {id: id, value: value} ];
+    this.setState({ "items": items });
+    console.log("NEW items", items.length, id, value);
+  }
 
   render () {
+    console.log("TodoForm.render", "state items", this.state.items.length, "props", this.props);
+
     return (
-      <form id="todo">
-        <div className="TodoList">
-          <TodoItem id="test" value="test" />
-          <TodoItem id="test2" value="test2" />
-        </div>
+      <form id="todo" onSubmit={this.handleSubmit}>
+        <TodoList items={this.state.items} />
         <hr></hr>
         <input type="text" id="item" name="item" />
         <AddButton/>
-        <button id="cleartodo" onClick={clearDone}>Clear done</button>
+        <button id="cleartodo" onClick={this.clearDone}>Clear done</button>
       </form>
     );
   }
 }
 
-function TodoItem(props) {
+class TodoList extends React.Component {
+  constructor (props) {
+    super(props);
+    let items = [];
+    if (props.items) {
+      items = props.items;
+    }
+
+    console.log('TL props', props, ' items', items);
+
+    //this.handleChange = this.handleChange.bind(this);
+  }
+
+  // handleChange (event) {
+  //   //let items = this.state.items;
+  //   // let listItems = items.map((item) => 
+  //   //   <TodoItem key={item.id.toString()} id={item.id.toString()} value={item.value} />
+  //   // );
+  //   console.log('handleChange', event.target.id, event.target.textContent);
+  //   // this.setState({ items: [ ...items, 
+  //   //   {id: event.target.id, value: event.target.value}
+  //   // ]});
+
+  //   let items = (this.state.items) ? this.state.items : [];
+  //   items = items.concat([{id: event.target.id, value: event.target.value}]);
+  //   this.setState({ items: items });
+  // }
+
+  render () {
+    console.log("TodoList.render", this.state, this.props);
+    let items = (this.props.items) ? this.props.items : [];
+    
+    let listItems = items.map((item) => 
+      <TodoItem key={item.id.toString()} id={item.id.toString()} value={item.value} />
+    );
+    return (
+      <div className="todo-list">
+        {listItems}
+      </div>
+    );
+  }
+}
+
+function TodoItem (props) {
   return (
     <div className="todo-item">
       <input type="checkbox" id={props.id} name={props.id} />
@@ -58,44 +132,8 @@ function TodoItem(props) {
   );
 }
 
-function AddButton() {
-  function handleClick(event) {
-    console.log('add - handleClick', event);
-    let entry = document.querySelector('#todo input#item');
-    // convert to todo item
-    // choose unique id based on timestamp
-    let id = new Date().valueOf();
-    let item = <TodoItem id={id} value={entry.value} />;
-    console.log(id, item);
-    event.preventDefault();
-  }
+function AddButton () {
   return (
-    <button id="addtodo" onClick={handleClick}>Add</button>
+    <button id="addtodo" type="submit">Add</button>
   );
-}
-
-/**
- * clearDone
- * 
- * Removes checked items from todo list
- * @param {*} event 
- */
-function clearDone (event) {
-  // get list of todo items
-  let items = document.querySelectorAll('#todo input[type="checkbox"]');
-  if (items) {
-    for (let i = 0; i < items.length; i++) {
-      // remove todo items marked as done
-      if (items[i].checked) {
-        items[i].parentNode.remove();
-      }
-    }
-  }
-
-  event.preventDefault();
-}
-
-function addItems () {
-  console.log('addItems');
-  return;
 }
