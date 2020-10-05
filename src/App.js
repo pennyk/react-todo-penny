@@ -51,22 +51,37 @@ class TodoForm extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    console.log("handleSubmit", event.target, "state", this.state, "props", this.props);
     let value = event.target.querySelector("#todo input#item").value;
-    // choose unique id based on timestamp
-    let id = new Date().valueOf().toString();
     let items = (this.props && this.props.items) ? this.props.items : [];
     if (items.length === 0) {
       items = (this.state && this.state.items) ? this.state.items : [];
     }
-    items = items.concat([{id: id, value: value}]);
-    this.setState({ "items": items });
-    console.log("NEW items", items.length, id, value);
+
+    // Validation
+    if (value.trim() === "") {
+      // empty todo items are rejected
+      console.log("Warning: New todo item rejected - empty");
+      return false;
+    }
+    let valueMatches = items.filter(function(item) {
+      return value.toUpperCase() === item.value.toUpperCase();
+    });
+    if (valueMatches.length > 0) {
+      // duplicate todo items are rejected
+      console.log("Warning: New todo item rejected - duplicate");
+      return false;
+    }
+    else if (valueMatches.length === 0) {
+      // choose unique id based on timestamp
+      let id = new Date().valueOf().toString();
+
+      items = items.concat([{id: id, value: value}]);
+      this.setState({ "items": items });
+    }
+
   }
 
   render () {
-    console.log("TodoForm.render", "state items", this.state.items.length, "props", this.props);
-
     return (
       <form id="todo" onSubmit={this.handleSubmit}>
         <TodoList items={this.state.items} />
@@ -80,21 +95,8 @@ class TodoForm extends React.Component {
 }
 
 class TodoList extends React.Component {
-  constructor (props) {
-    super(props);
-    let items = [];
-    if (props.items) {
-      items = props.items;
-    }
-
-    console.log('TL props', props, ' items', items);
-
-  }
-
   render () {
-    console.log("TodoList.render", this.state, this.props);
     let items = (this.props.items) ? this.props.items : [];
-    
     let listItems = items.map((item) => 
       <TodoItem key={item.id.toString()} id={item.id.toString()} value={item.value} />
     );
