@@ -86,7 +86,7 @@ class TodoForm extends React.Component {
       <form id="todo" onSubmit={this.handleSubmit}>
         <TodoList items={this.state.items} />
         <hr></hr>
-        <input type="text" id="item" name="item" />
+        <input type="text" id="item" name="item" placeholder="Type new todo..." />
         <AddButton/>
         <button id="cleartodo" onClick={this.clearDone}>Clear done</button>
       </form>
