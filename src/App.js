@@ -2,8 +2,8 @@ import React from "react";
 import "./styles.css";
 
 const todos = [
-  { id: "test1", value: "Pretend previous todo - Test 1" },
-  { id: "test2", value: "Pretend previous todo - Test 2" }
+  { id: "test1", value: "Pretend previous todo - Test 1", done: true },
+  { id: "test2", value: "Pretend previous todo - Test 2", done: false }
 ];
 
 export default function App() {
@@ -75,7 +75,7 @@ class TodoForm extends React.Component {
       // choose unique id based on timestamp
       let id = new Date().valueOf().toString();
 
-      items = items.concat([{id: id, value: value}]);
+      items = items.concat([{id: id, value: value, done: false}]);
       this.setState({ "items": items });
     }
 
@@ -96,9 +96,9 @@ class TodoForm extends React.Component {
 
 class TodoList extends React.Component {
   render () {
-    let items = (this.props.items) ? this.props.items : [];
-    let listItems = items.map((item) => 
-      <TodoItem key={item.id.toString()} id={item.id.toString()} value={item.value} />
+    const items = (this.props.items) ? this.props.items : [];
+    const listItems = items.map((item) => 
+      <TodoItem key={item.id.toString()} item={item} />
     );
     return (
       <div className="todo-list">
@@ -108,13 +108,18 @@ class TodoList extends React.Component {
   }
 }
 
-function TodoItem (props) {
-  return (
-    <div className="todo-item">
-      <input type="checkbox" id={props.id} name={props.id} />
-      <label htmlFor={props.id}>{props.value}</label>
-    </div>
-  );
+class TodoItem extends React.Component {
+  render () {
+    const item = this.props.item;
+    return (
+      <div className="todo-item">
+        {item.done ?
+        <input type="checkbox" id={item.id} name={item.id} defaultChecked />
+      : <input type="checkbox" id={item.id} name={item.id} />}
+        <label htmlFor={item.id}>{item.value}</label>
+      </div>
+    );
+  }
 }
 
 function AddButton () {

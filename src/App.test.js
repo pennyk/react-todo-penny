@@ -132,7 +132,6 @@ describe("Add Function Testing", () => {
 
     // get original count of todo list items
     const list = rootContainer.querySelectorAll("div.todo-item");
-    console.log("list", list);
     expect(list.length).to.equal(2);
 
     // add todo item
