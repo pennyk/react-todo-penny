@@ -81,34 +81,135 @@ describe("Render Testing", () => {
 });
 
 describe("Add Function Testing", () => {
-  it.skip("___", () => {
+  it("Adds unique todo item to list (when list already has items)", () => {
     act(() => {
       ReactDOM.render(<App />, rootContainer);
     });
-    const h1 = rootContainer.querySelector("h1");
-    expect(h1.textContent).to.equal("Todo App");
+    const button = rootContainer.querySelector("#addtodo");
+    const field = rootContainer.querySelector("#item");
+    // get original count of todo list items
+    const list = rootContainer.querySelectorAll("div.todo-item");
+    expect(list.length).to.equal(2);
+    // add todo item
+    field.value="Unique todo item";
+    button.click();
+    const list2 = rootContainer.querySelectorAll("div.todo-item");
+    expect(list2.length).to.equal(3);
   });
-
-  // Adds unique todo item to list (when list already has items)
-  // Adds unique todo item to list (when list has 0 items)
-  // Does not add todo item when text field is empty
-  // Does not add todo item when text field contains only whitespace
-  // Does not add todo item when it is a duplicate (matching case)
-  // Does not add todo item when it is a duplicate (even when case does not match)
-});
-
-describe("Clear Function Testing", () => {
-  it.skip("___", () => {
+  it.skip("Adds unique todo item to list (when list has 0 items)", () => {
+    const items = [];
+    act(() => {
+      // Not implemented: <App todos={items} />
+      ReactDOM.render(<App todos={items} />, rootContainer);
+    });
+    //const element = rootContainer.querySelector("h1");
+    //expect(element.textContent).to.equal("Todo App");
+  });
+  it("Does not add todo item when text field is empty", () => {
     act(() => {
       ReactDOM.render(<App />, rootContainer);
     });
-    const h1 = rootContainer.querySelector("h1");
-    expect(h1.textContent).to.equal("Todo App");
-  });
+    const button = rootContainer.querySelector("#addtodo");
+    const field = rootContainer.querySelector("#item");
 
-  // Does not clear when no todo items selected
-  // Clears correct item when first item selected
-  // Clears correct item when middle item selected
-  // Clears correct item when last item selected
-  // Can still add a todo item after clear done used
+    // get original count of todo list items
+    const list = rootContainer.querySelectorAll("div.todo-item");
+    expect(list.length).to.equal(2);
+
+    // add todo item
+    field.value="";
+    button.click();
+
+    const list2 = rootContainer.querySelectorAll("div.todo-item");
+    expect(list2.length).to.equal(2);
+  });
+  it("Does not add todo item when text field contains only whitespace", () => {
+    act(() => {
+      ReactDOM.render(<App />, rootContainer);
+    });
+    const button = rootContainer.querySelector("#addtodo");
+    const field = rootContainer.querySelector("#item");
+
+    // get original count of todo list items
+    const list = rootContainer.querySelectorAll("div.todo-item");
+    console.log("list", list);
+    expect(list.length).to.equal(2);
+
+    // add todo item
+    field.value="   ";
+    button.click();
+    const list2 = rootContainer.querySelectorAll("div.todo-item");
+    expect(list2.length).to.equal(2);
+  });
+  it("Does not add todo item when it is a duplicate (matching case)", () => {
+    act(() => {
+      ReactDOM.render(<App />, rootContainer);
+    });
+    const button = rootContainer.querySelector("#addtodo");
+    const field = rootContainer.querySelector("#item");
+    const value = "todo item";
+
+    // add todo item
+    field.value = value;
+    button.click();
+
+    // get count of todo list items before duplicate added
+    const list = rootContainer.querySelectorAll("div.todo-item");
+    const index = list.length-1;
+    expect(list.length).to.be.gte(1);
+
+    // expect first new item added to exist
+    expect(list[index].querySelector("label").textContent).to.equal(value);
+
+    // add duplicate todo item
+    field.value = value;
+    button.click();
+
+    const list2 = rootContainer.querySelectorAll("div.todo-item");
+    expect(list2.length).to.equal(list.length);
+  });
+  it("Does not add todo item when it is a duplicate (even when case does not match)", () => {
+    act(() => {
+      ReactDOM.render(<App />, rootContainer);
+    });
+    const button = rootContainer.querySelector("#addtodo");
+    const field = rootContainer.querySelector("#item");
+    const value = "todo item";
+    const value2 = "Todo Item";
+
+    // add todo item
+    field.value = value;
+    button.click();
+
+    // get count of todo list items before duplicate added
+    const list = rootContainer.querySelectorAll("div.todo-item");
+    const index = list.length-1;
+    expect(list.length).to.be.gte(1);
+
+    // expect first new item added to exist
+    expect(list[index].querySelector("label").textContent).to.equal(value);
+
+    // add duplicate todo item
+    field.value = value2;
+    button.click();
+    
+    const list2 = rootContainer.querySelectorAll("div.todo-item");
+    expect(list2.length).to.equal(list.length);
+  });
 });
+
+// describe("Clear Function Testing", () => {
+//   it.skip("___", () => {
+//     act(() => {
+//       ReactDOM.render(<App />, rootContainer);
+//     });
+//     const h1 = rootContainer.querySelector("h1");
+//     expect(h1.textContent).to.equal("Todo App");
+//   });
+
+//   // Does not clear when no todo items selected
+//   // Clears correct item when first item selected
+//   // Clears correct item when middle item selected
+//   // Clears correct item when last item selected
+//   // Can still add a todo item after clear done used
+// });
